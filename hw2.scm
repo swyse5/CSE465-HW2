@@ -32,7 +32,11 @@
 
 ; Return a list with only the negatives items
 (define (negatives lst)
-	lst
+	(cond
+		((NULL? lst) '())
+		((negative? (car lst)) (cons (car lst) (negatives (cdr lst))))
+		(else (odds (cdr lst)))
+	)
 )
 
 (mydisplay (negatives '(-1 1 2 3 4 -4 5)))
@@ -54,9 +58,6 @@
 	(list (minList lst) (maxList lst))
 )
 
-(mydisplay (minAndMax '(1 2 -3 4 2)))
-(mydisplay (minAndMax '(1)))
-
 ; Helper function to find max in a list
 (define (maxList lst)
 	(if (= (length lst) 1) (CAR lst) (max (CAR lst) (maxList (CDR lst))))
@@ -66,6 +67,10 @@
 (define (minList lst)
 	(if (= (length lst) 1) (CAR lst) (min (CAR lst) (minList (CDR lst))))
 )
+
+(mydisplay (minAndMax '(1 2 -3 4 2)))
+(mydisplay (minAndMax '(1)))
+
 
 ; Returns a list identical to the first, except all nested lists
 ; are removed:
@@ -126,7 +131,7 @@
 ; state -- state
 ; zips -- zipcode DB
 (define (zipCount state zips)
-	0
+
 )
 
 (mydisplay (zipCount "OH" zipcodes))
@@ -153,7 +158,19 @@
 ; lst -- flat list of items
 ; filters -- list of predicates to apply to the individual elements
 (define (filterList lst filters)
-	lst
+	(if (NULL? filters)
+		lst
+		(filterList (filterListHelper lst (car filters)) (cdr filters))
+	)
+)
+
+; A helper function for filterList
+(define (filterListHelper lst filter)
+	(cond
+		((NULL? lst) ('())
+		((eval (list filter (car lst)) user-initial-environment) (cons (car lst) (filterListHelper (cdr lst) filter)))
+		(else (filterListHelper (cdr lst) filter))
+	)
 )
 
 (mydisplay (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) '(POS?)))
@@ -161,4 +178,4 @@
 (mydisplay (filterList '(1 2 3 11 22 33 -1 -2 -3 -11 -22 -33) '(POS? EVEN? LARGE?)))
 
 ; include the following line when on lnx01
-;,exit
+,exit
