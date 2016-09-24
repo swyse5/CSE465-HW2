@@ -14,7 +14,16 @@
 ; ax^2+bx+c=0. Return only real roots. The list will
 ; have 0, 1, or two roots
 (define (quadratic a b c)
-	'(0 0)
+	(cond 
+		((= a 0) (list (/ (- 0 c) b)))
+		(else
+			(LET (
+				(root_part_over_2a
+					(/ (sqrt (- (* b b) (* 4 a c))) (* 2 a)))
+				(minus_b_over_2a (/ (- 0 b) (* 2 a)))
+			)
+		(list (+ minus_b_over_2a root_part_over_2a) (- minus_b_over_2a root_part_over_2a))))
+	)
 )
 
 (mydisplay (quadratic 1 0 0))
@@ -30,7 +39,7 @@
 
 ; Returns true if the two lists have identical structure.
 ; (struct '(a b c (c a b)) '(1 2 3 (a b c))) -> #t
-; (struct '(a b c (c a b) a) '(1 2 3 (a b c) 0)) -> #F
+; (struct '(a b c (c a b)) '(1 2 3 (a b c) 0)) -> #f
 (define (struct lst1 lst2)
 	#t
 )
@@ -42,11 +51,21 @@
 ; in the list and the second is the largest in the list. 
 ; lst -- flat, contains numeric values, and length is >= 1.
 (define (minAndMax lst)
-	'()
+	(list (minList lst) (maxList lst))
 )
 
 (mydisplay (minAndMax '(1 2 -3 4 2)))
 (mydisplay (minAndMax '(1)))
+
+; Helper function to find max in a list
+(define (maxList lst)
+	(if (= (length lst) 1) (CAR lst) (max (CAR lst) (maxList (CDR lst))))
+)
+
+; Helper function to find min in a list
+(define (minList lst)
+	(if (= (length lst) 1) (CAR lst) (min (CAR lst) (minList (CDR lst))))
+)
 
 ; Returns a list identical to the first, except all nested lists
 ; are removed:
