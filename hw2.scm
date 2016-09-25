@@ -29,7 +29,7 @@
 (define (negatives lst)
 	(cond
 		((NULL? lst) '())
-		((negative? (car lst)) (cons (car lst) (negatives (cdr lst))))
+		((NEGATIVE? (car lst)) (cons (car lst) (negatives (cdr lst))))
 		(else (odds (cdr lst)))
 	)
 )
@@ -40,18 +40,11 @@
 ; (struct '(a b c (c a b)) '(1 2 3 (a b c))) -> #t
 ; (struct '(a b c (c a b)) '(1 2 3 (a b c) 0)) -> #f
 (define (struct lst1 lst2)
-	(equal? lst1 lst2)
+	(EQUAL? lst1 lst2)
 )
 
 (mydisplay (struct '(a b c (c a b)) '(1 2 3 (a b c))))
 (mydisplay (struct '(a b c (c a b)) '(1 2 3 (a b c) 0)))
-
-; Returns a list of two numeric values. The first is the smallest
-; in the list and the second is the largest in the list. 
-; lst -- flat, contains numeric values, and length is >= 1.
-(define (minAndMax lst)
-	(list (minList lst) (maxList lst))
-)
 
 ; Helper function to find max in a list
 (define (maxList lst)
@@ -61,6 +54,13 @@
 ; Helper function to find min in a list
 (define (minList lst)
 	(if (= (length lst) 1) (CAR lst) (min (CAR lst) (minList (CDR lst))))
+)
+
+; Returns a list of two numeric values. The first is the smallest
+; in the list and the second is the largest in the list. 
+; lst -- flat, contains numeric values, and length is >= 1.
+(define (minAndMax lst)
+	(list (minList lst) (maxList lst))
 )
 
 (mydisplay (minAndMax '(1 2 -3 4 2)))
@@ -87,7 +87,10 @@
 ; ((1 a) (1 b) (1 c) (2 a) (2 b) (2 c))
 ; lst1 & lst2 -- two flat lists with same length.
 (define (crossproduct lst1 lst2)
-	'()
+	(cond
+		((NULL? lst1) '())
+		(else (cons (list (car lst1) (car lst2)) (crossproduct (cdr lst1) (cdr lst2))))
+	)
 )
 
 (mydisplay (crossproduct '(1 2) '(a b c)))
