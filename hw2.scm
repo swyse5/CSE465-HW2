@@ -14,18 +14,14 @@
 ; ax^2+bx+c=0. Return only real roots. The list will
 ; have 0, 1, or two roots
 (define (quadratic a b c)
-	(cond 
-		((= a 0) (list (/ (- 0 c) b)))
-		(else
-			(LET (
-				(root_part_over_2a
-					(/ (sqrt (- (* b b) (* 4 a c))) (* 2 a)))
-				(minus_b_over_2a (/ (- 0 b) (* 2 a)))
-			)
-		(list (+ minus_b_over_2a root_part_over_2a) (- minus_b_over_2a root_part_over_2a))))
+	(define (quadrt a b c)
+		(sqrt (- (* b b) (* (* 4 a) c)))
 	)
+	(list (/ (+ (- b) (quadrt a b c)) (* 2 a))
+		(/ (- (- b) (quadrt a b c)) (* 2 a)))
 )
 
+(mydisplay (BOOBS))
 (mydisplay (quadratic 1 0 0))
 (mydisplay (quadratic 0 1 0))
 (mydisplay (quadratic 3 4 2))
@@ -45,7 +41,7 @@
 ; (struct '(a b c (c a b)) '(1 2 3 (a b c))) -> #t
 ; (struct '(a b c (c a b)) '(1 2 3 (a b c) 0)) -> #f
 (define (struct lst1 lst2)
-	#t
+	(equal? lst1 lst2)
 )
 
 (mydisplay (struct '(a b c (c a b)) '(1 2 3 (a b c))))
