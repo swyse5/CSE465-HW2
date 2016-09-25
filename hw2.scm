@@ -21,7 +21,6 @@
 		(/ (- (- b) (quadrt a b c)) (* 2 a)))
 )
 
-(mydisplay (BOOBS))
 (mydisplay (quadratic 1 0 0))
 (mydisplay (quadratic 0 1 0))
 (mydisplay (quadratic 3 4 2))
