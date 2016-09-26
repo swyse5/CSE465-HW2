@@ -36,11 +36,22 @@
 
 (mydisplay (negatives '(-1 1 2 3 4 -4 5)))
 
+; Helper function for struct to find the list's structure
+(define (structHelper lst)
+    (if (NULL? lst)
+        lst
+        (if (LIST? (car lst))
+          (cons (structHelper (car lst)) (structHelper (cdr lst)))
+            (structHelper (cdr lst))
+        )
+    )
+)
+
 ; Returns true if the two lists have identical structure.
 ; (struct '(a b c (c a b)) '(1 2 3 (a b c))) -> #t
 ; (struct '(a b c (c a b)) '(1 2 3 (a b c) 0)) -> #f
 (define (struct lst1 lst2)
-	(EQUAL? lst1 lst2)
+    (equal? (structHelper lst1) (structHelper lst2))
 )
 
 (mydisplay (struct '(a b c (c a b)) '(1 2 3 (a b c))))
@@ -74,7 +85,10 @@
 ; (flatten '((a b) (c (d) e) f) -> (a b c d e f)
 ;
 (define (flatten lst)
-	'()
+	(cond ((NULL? lst) '())
+        ((PAIR? lst) (append (flatten (car x)) (flatten (cdr x))))
+        (else (list lst))
+    )
 )
 
 (mydisplay (flatten '(a b c)))
@@ -129,7 +143,11 @@
 ; state -- state
 ; zips -- zipcode DB
 (define (zipCount state zips)
-
+    (cond
+        ((NULL? zips) '())
+        ((EQUAL? (caddar zips) state) (zipCount (cdr zips) state (+ 1 counter)))
+        (else (cons (list counter state) (zipCount zips (caddar zips) 0))
+    )
 )
 
 (mydisplay (zipCount "OH" zipcodes))
