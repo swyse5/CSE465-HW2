@@ -28,9 +28,9 @@
 ; Return a list with only the negatives items
 (define (negatives lst)
 	(cond
-		((NULL? lst) '())
-		((NEGATIVE? (car lst)) (cons (car lst) (negatives (cdr lst))))
-		(else (odds (cdr lst)))
+		((null? lst) '())
+		((negative? (car lst)) (cons (car lst) (negatives (cdr lst))))
+		(else (negatives (cdr lst)))
 	)
 )
 
@@ -38,9 +38,9 @@
 
 ; Helper function for struct to find the list's structure
 (define (structHelper lst)
-    (if (NULL? lst)
+    (if (null? lst)
         lst
-        (if (LIST? (car lst))
+        (if (list? (car lst))
           (cons (structHelper (car lst)) (structHelper (cdr lst)))
             (structHelper (cdr lst))
         )
@@ -100,11 +100,28 @@
 ; The inputs '(1 2) and '(a b c) should return a single list:
 ; ((1 a) (1 b) (1 c) (2 a) (2 b) (2 c))
 ; lst1 & lst2 -- two flat lists with same length.
-(define (crossproduct lst1 lst2)
-	(cond
-		((NULL? lst1) '())
-		(else (cons (list (car lst1) (car lst2)) (crossproduct (cdr lst1) (cdr lst2))))
-	)
+(define crossproduct (lambda (lst1 lst2)
+        (if (null? lst1) '()
+            (appendList
+                (crossProductHelper (car lst1) lst2)
+                (crossproduct (cdr lst1) lst2)
+            )
+        )
+    )
+)
+
+(define crossProductHelper (lambda (x lst)
+        (if (null? lst) '()
+            (cons (list x (car lst)) (crossProductHelper x (cdr lst)))
+        )
+    )
+)
+
+(define appendList (lambda (lst1 lst2)
+        (if (null? lst1) lst2
+            (cons (car lst1) (appendList (cdr lst1) lst2))
+        )
+    )
 )
 
 (mydisplay (crossproduct '(1 2) '(a b c)))
@@ -144,8 +161,8 @@
 ; zips -- zipcode DB
 (define (zipCount state zips)
     (cond
-        ((NULL? zips) '())
-        ((EQUAL? (caddar zips) state) (zipCount (cdr zips) state (+ 1 counter)))
+        ((null? zips) '())
+        ((equal? (caddar zips) state) (zipCount (cdr zips) state (+ 1 counter)))
         (else (cons (list counter state) (zipCount zips (caddar zips) 0))
     )
 )
@@ -174,7 +191,7 @@
 ; lst -- flat list of items
 ; filters -- list of predicates to apply to the individual elements
 (define (filterList lst filters)
-	(if (NULL? filters)
+	(if (null? filters)
 		lst
 		(filterList (filterListHelper lst (car filters)) (cdr filters))
 	)
@@ -183,7 +200,7 @@
 ; A helper function for filterList
 (define (filterListHelper lst filter)
 	(cond
-		((NULL? lst) ('())
+		((null? lst) ('())
 		((eval (list filter (car lst)) user-initial-environment) (cons (car lst) (filterListHelper (cdr lst) filter)))
 		(else (filterListHelper (cdr lst) filter))
 	)
