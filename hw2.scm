@@ -201,7 +201,7 @@
 (define (filterListHelper lst filter)
 	(cond
 		((null? lst) ('())
-		((eval (list filter (car lst)) user-initial-environment) (cons (car lst) (filterListHelper (cdr lst) filter)))
+		((eval (list filter (car lst)) (interaction-environment)) (cons (car lst) (filterListHelper (cdr lst) filter)))
 		(else (filterListHelper (cdr lst) filter))
 	)
 )
